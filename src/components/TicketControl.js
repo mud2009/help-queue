@@ -1,48 +1,38 @@
 import React from 'react';
 import NewTicketForm from './NewTicketForm';
 import TicketList from './TicketList';
-import Debug from './Debug';
-import Pair from './Pair';
-import Fifteen from './Fifteen';
 
 class TicketControl extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      visibleOnPage: 0
+      formVisibleOnPage: false,
+      mainTicketList: []
     };
   }
 
   handleClick = () => {
     this.setState(prevState => ({
-      visibleOnPage: prevState.visibleOnPage + 1
+      formVisibleOnPage: !prevState.formVisibleOnPage
     }));
-    if (this.state.visibleOnPage > 3){
-      this.setState(() => ({
-        visibleOnPage: 0
-      }))
-    }
+  }
+
+  handleAddingNewTicketToList = (newTicket) => {
+    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
+    this.setState({mainTicketList: newMainTicketList,
+                  formVisibleOnPage: false });
   }
 
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
-    if (this.state.visibleOnPage === 0) {
-      currentlyVisibleState = <TicketList />
-      buttonText = "Add Ticket";
-    } else if(this.state.visibleOnPage === 1){
-      currentlyVisibleState = <Debug />
-      buttonText = "Yes";
-    } else if (this.state.visibleOnPage === 2){
-      currentlyVisibleState = <Pair />
-      buttonText = "Yes";
-    } else if (this.state.visibleOnPage === 3){
-      currentlyVisibleState = <Fifteen />
-      buttonText = "Yes";
-    } else {
-      currentlyVisibleState = <NewTicketForm />
+    if (this.state.formVisibleOnPage) {
+      currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />
       buttonText = "Return to Ticket List";
+    } else {
+      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} />;
+      buttonText = "Add Ticket";
     }
     return (
       <React.Fragment>
