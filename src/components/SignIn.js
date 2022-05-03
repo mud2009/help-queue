@@ -1,5 +1,6 @@
 import React from "react";
-import firebase from 'firebase/compat/';
+import firebase from 'firebase/compat/app';
+import 'firebase/auth'
 
 function Signin(){  
   function doSignUp(event) {
